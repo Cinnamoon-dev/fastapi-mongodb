@@ -52,8 +52,8 @@ async def student_view(id: int):
 
 @app.post("/student/add")
 async def student_add(student: Student):
-    result = students_collection.insert_one(dict(student))
-    return {"error": False, "message": "Student added successfully"}
+    inserted_student_result = students_collection.insert_one(dict(student))
+    return {"error": False, "message": f"Student {str(inserted_student_result.inserted_id)} added successfully"}
 
 @app.put("/student/edit/{id}")
 async def student_edit(id: str, student: Student):
