@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from pymongo.mongo_client import MongoClient
 
 app = FastAPI(title="A simple test with MongoDB")
-client = MongoClient(os.getenv("MONGO_CLIENT", "mongodb://localhost:27017/college"))
+client = MongoClient(os.getenv("MONGO_CLIENT", "mongodb://localhost:27017"))
 db = client.college
 students_collection = db["students"]
 
