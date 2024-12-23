@@ -9,6 +9,13 @@ client = MongoClient(os.getenv("MONGO_CLIENT", "mongodb://localhost:27017"))
 db = client.college
 students_collection = db["students"]
 
+def test_mongo_conn():
+    try:
+        client.admin.command('ping')
+        print("ping db")
+    except Exception as e:
+        print(e)
+
 class Student(BaseModel):
     name: str
     age: int
@@ -60,9 +67,5 @@ async def student_delete(id: str):
 
 
 if __name__ == '__main__':
-    try:
-        client.admin.command('ping')
-        print("ping db")
-    except Exception as e:
-        print(e)
+    test_mongo_conn()
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
