@@ -26,7 +26,7 @@ class StudentService:
     def edit_student(self, id, fields):
         # TODO
         # show when not found
-        edited_document = students_collection.find_one_and_update({"_id": ObjectId(id)}, {"$set": dict(student)})
+        edited_document = students_collection.find_one_and_update({"_id": ObjectId(id)}, {"$set": dict(fields)})
         return dict(edited_document)["_id"]
     
     def delete_student(self, id):
