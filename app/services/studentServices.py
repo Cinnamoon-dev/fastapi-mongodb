@@ -25,9 +25,34 @@ class StudentService:
     
     def edit_student(self, id, fields):
         # TODO
-        # show when not found
-        edited_document = students_collection.find_one_and_update({"_id": ObjectId(id)}, {"$set": dict(fields)})
-        return dict(edited_document)["_id"]
+        # extract in a method
+        document_to_update = students_collection.find_one({"_id": ObjectId(id)})
+
+        if not document_to_update:
+            raise HTTPException(status_code=404, detail=f"student {id} not found")
+
+        document_to_update = student_serial(document_to_update)
+
+        fields_dict = dict(fields)
+        keys = []
+
+        for k in fields_dict.keys():
+            if not fields_dict[k]:
+                keys.append(k)
+        
+        for key in keys:
+            fields_dict.pop(key)
+
+        print(fields_dict)
+
+        for k, v in fields_dict.items():
+            document_to_update[k] = v
+            print(document_to_update)
+
+        print(document_to_update)
+
+        edited_document = students_collection.update_one({"_id": ObjectId(id)}, {"$set": document_to_update})
+        return edited_document.upserted_id
     
     def delete_student(self, id):
         # TODO
