@@ -1,36 +1,27 @@
-from bson import ObjectId
 from fastapi import APIRouter
-from app.database import students_collection
-from app.models.studentModel import Student, student_serial, list_students
+from app.models.studentModel import Student
+from app.adapters.studentAdapter import StudentAdapter
+from app.schemas.studentSchemas import StudentEditSchema
 
 router = APIRouter(prefix="/student")
 
 
 @router.get("/all")
 async def student_all():
-    students = list_students(students_collection.find())
-    return {"error": False, "data": students}
+    return StudentAdapter().student_all_controller()
 
 @router.get("/view/{id}")
 async def student_view(id):
-    student = students_collection.find_one({"_id": ObjectId(id)})
-
-    if not student:
-        return {"error": True, "message": "Student not found"}
-
-    return {"error": False, "data": student_serial(student)}
+    return StudentAdapter().student_view_controller(id)
 
 @router.post("/add")
 async def student_add(student: Student):
-    inserted_student_result = students_collection.insert_one(dict(student))
-    return {"error": False, "message": f"Student {str(inserted_student_result.inserted_id)} added successfully"}
+    return StudentAdapter().student_add_controller(student)
 
 @router.put("/edit/{id}")
-async def student_edit(id: str, student: Student):
-    students_collection.find_one_and_update({"_id": ObjectId(id)}, {"$set": dict(student)})
-    return {"error": False, "message": "Student updated successfully"}
+async def student_edit(id: str, student: StudentEditSchema):
+    return StudentAdapter().student_edit_controller(id, student)
 
 @router.delete("/delete/{id}")
 async def student_delete(id: str):
-    students_collection.find_one_and_delete({"_id": ObjectId(id)})
-    return {"error": False, "message": "Student deleted successfully"}
+    return StudentAdapter().student_delete_controller(id)
