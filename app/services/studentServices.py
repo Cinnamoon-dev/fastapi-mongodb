@@ -55,7 +55,9 @@ class StudentService:
         return edited_document.upserted_id
     
     def delete_student(self, id):
-        # TODO
-        # show when not found
         deleted_document = students_collection.find_one_and_delete({"_id": ObjectId(id)})
+
+        if deleted_document is None:
+            raise HTTPException(status_code=404, detail=f"Student {id} not found")
+
         return dict(deleted_document)["_id"]
