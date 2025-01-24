@@ -1,12 +1,12 @@
 import uvicorn
 from fastapi import FastAPI
 from app.database import test_mongo_conn
-from app.controllers import studentController
+from app.controllers import userController
 
 
 app = FastAPI()
 
-app.include_router(studentController.router)
+app.include_router(userController.router)
 
 if __name__ == '__main__':
     test_mongo_conn()
