@@ -43,13 +43,8 @@ class UserService:
         for key in keys:
             fields_dict.pop(key)
 
-        print(fields_dict)
-
         for k, v in fields_dict.items():
             document_to_update[k] = v
-            print(document_to_update)
-
-        print(document_to_update)
 
         edited_document = users_collection.update_one({"_id": ObjectId(id)}, {"$set": document_to_update})
         return edited_document.upserted_id
