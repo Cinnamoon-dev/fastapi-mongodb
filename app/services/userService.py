@@ -23,7 +23,10 @@ class UserService:
     def add_user(self, user: User) -> str:
         # TODO
         # add not repeat test case
-        inserted_user_result = users_collection.insert_one(user.model_dump())
+        new_user = user.model_dump()
+        new_user["user_type_id"] = ObjectId(new_user["user_type_id"])
+        
+        inserted_user_result = users_collection.insert_one(new_user)
         return inserted_user_result.inserted_id
     
     def edit_user(self, id: str, fields: dict[str, Any]) -> str:
