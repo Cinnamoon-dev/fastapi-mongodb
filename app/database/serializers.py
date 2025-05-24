@@ -6,7 +6,10 @@ def document_serial(document: dict[str, Any]) -> dict[str, Any]:
 
     for id_key in id_keys:
         document[id_key] = str(document[id_key])
-        del document[id_key]
+
+    if document.get("_id"):
+        document["id"] = document["_id"]
+        del document["_id"]
 
     return document
 
