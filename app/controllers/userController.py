@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 from app.models.userModel import User
 from app.adapters.userAdapter import UserAdapter
 from app.schemas.userSchema import UserEditSchema
