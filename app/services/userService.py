@@ -1,29 +1,32 @@
-from fastapi import HTTPException
+from typing import Any
 from bson import ObjectId
+from fastapi import HTTPException
+
+from app.models.userModel import User
 from app.database import users_collection
-from app.models.userModel import User, user_serial, list_users
+from app.database.serializers import document_serial, list_documents
 
 class UserService:
-    def get_all_users(self):
+    def get_all_users(self) -> list[dict[str, Any]]:
         # TODO
         # pagination
-        return list_users(users_collection.find())
+        return list_documents(list(users_collection.find()))
     
-    def view_one_user(self, id):
+    def view_one_user(self, id: str) -> dict[str, Any]:
         user = users_collection.find_one({"_id": ObjectId(id)})
 
         if not user:
             raise HTTPException(status_code=404, detail=f"user {id} not found")
         
-        return user_serial(user)
+        return document_serial(user)
     
-    def add_user(self, user: User):
+    def add_user(self, user: User) -> str:
         # TODO
         # add not repeat test case
-        inserted_user_result = users_collection.insert_one(dict(user))
+        inserted_user_result = users_collection.insert_one(user.model_dump())
         return inserted_user_result.inserted_id
     
-    def edit_user(self, id, fields):
+    def edit_user(self, id: str, fields: dict[str, Any]) -> str:
         # TODO
         # extract in a method
         document_to_update = users_collection.find_one({"_id": ObjectId(id)})
@@ -31,7 +34,7 @@ class UserService:
         if not document_to_update:
             raise HTTPException(status_code=404, detail=f"user {id} not found")
 
-        document_to_update = user_serial(document_to_update)
+        document_to_update = document_serial(document_to_update)
 
         fields_dict = dict(fields)
         keys = []
@@ -49,7 +52,7 @@ class UserService:
         edited_document = users_collection.update_one({"_id": ObjectId(id)}, {"$set": document_to_update})
         return edited_document.upserted_id
     
-    def delete_user(self, id):
+    def delete_user(self, id: str) -> str:
         deleted_document = users_collection.find_one_and_delete({"_id": ObjectId(id)})
 
         if deleted_document is None:
