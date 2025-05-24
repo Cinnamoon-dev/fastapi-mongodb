@@ -10,7 +10,7 @@ python = "^3.12"
 fastapi = "^0.115.6"
 uvicorn = "^0.34.0"
 pymongo = "^4.10.1"
-pydantic = "^2.10.5"
+pydantic = {extras = ["email"], version = "^2.11.5"}
 
 
 [build-system]
