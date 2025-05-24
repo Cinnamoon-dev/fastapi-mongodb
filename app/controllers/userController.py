@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from app.models.userModel import User
 from app.adapters.userAdapter import UserAdapter
-from app.schemas.userSchema import UserEditSchema
+from app.schemas.userSchema import UserEditSchema, UserAddSchema
 
 router = APIRouter(prefix="/user")
 
@@ -16,7 +16,7 @@ async def user_view(id):
     return UserAdapter().user_view_controller(id)
 
 @router.post("/add")
-async def user_add(user: User):
+async def user_add(user: UserAddSchema):
     return UserAdapter().user_add_controller(user)
 
 @router.put("/edit/{id}")
