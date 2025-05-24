@@ -1,10 +1,9 @@
 from fastapi import APIRouter
 
-from app.models.userModel import User
 from app.adapters.userAdapter import UserAdapter
 from app.schemas.userSchema import UserEditSchema, UserAddSchema
 
-router = APIRouter(prefix="/user")
+router = APIRouter(prefix="/user", tags=["user"])
 
 
 @router.get("/all")
@@ -12,7 +11,7 @@ async def user_all():
     return UserAdapter().user_all_controller()
 
 @router.get("/view/{id}")
-async def user_view(id):
+async def user_view(id: str):
     return UserAdapter().user_view_controller(id)
 
 @router.post("/add")
