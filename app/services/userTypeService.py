@@ -1,0 +1,61 @@
+from typing import Any
+from bson import ObjectId
+from fastapi import HTTPException
+
+from app.models.userTypeModel import UserType
+from app.database import user_types_collection
+from app.database.serializers import document_serial, list_documents
+
+class UserTypeService:
+    def get_all_user_types(self) -> list[dict[str, Any]]:
+        # TODO
+        # pagination
+        return list_documents(list(user_types_collection.find()))
+    
+    def view_one_user_type(self, id: str) -> dict[str, Any]:
+        user = user_types_collection.find_one({"_id": ObjectId(id)})
+
+        if not user:
+            raise HTTPException(status_code=404, detail=f"user {id} not found")
+        
+        return document_serial(user)
+    
+    def add_user_type(self, user: UserType) -> str:
+        # TODO
+        # add not repeat test case
+        inserted_user_result = user_types_collection.insert_one(user.model_dump())
+        return inserted_user_result.inserted_id
+    
+    def edit_user_type(self, id: str, fields: dict[str, Any]) -> str:
+        # TODO
+        # extract in a method
+        document_to_update = user_types_collection.find_one({"_id": ObjectId(id)})
+
+        if not document_to_update:
+            raise HTTPException(status_code=404, detail=f"user {id} not found")
+
+        document_to_update = document_serial(document_to_update)
+
+        fields_dict = dict(fields)
+        keys = []
+
+        for k in fields_dict.keys():
+            if not fields_dict[k]:
+                keys.append(k)
+        
+        for key in keys:
+            fields_dict.pop(key)
+
+        for k, v in fields_dict.items():
+            document_to_update[k] = v
+
+        edited_document = user_types_collection.update_one({"_id": ObjectId(id)}, {"$set": document_to_update})
+        return edited_document.upserted_id
+    
+    def delete_user_type(self, id: str) -> str:
+        deleted_document = user_types_collection.find_one_and_delete({"_id": ObjectId(id)})
+
+        if deleted_document is None:
+            raise HTTPException(status_code=404, detail=f"user {id} not found")
+
+        return dict(deleted_document)["_id"]
