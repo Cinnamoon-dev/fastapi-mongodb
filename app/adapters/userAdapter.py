@@ -1,4 +1,3 @@
-from bson import ObjectId
 from fastapi import HTTPException
 
 from app.models.userModel import User
@@ -20,9 +19,9 @@ class UserAdapter:
                 name = user.name,
                 email = user.email,
                 password = user.password,
-                user_type_id = ObjectId(user.user_type_id)
+                user_type_id = user.user_type_id
             )
-        except Exception:
+        except Exception as e:
             raise HTTPException(status_code=422, detail="User body invalid!")
 
         inserted_id = UserService().add_user(new_user)
