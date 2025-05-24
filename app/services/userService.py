@@ -10,7 +10,7 @@ class UserService:
     def get_all_users(self) -> list[dict[str, Any]]:
         # TODO
         # pagination
-        return list_documents(list(users_collection.find()))
+        return self._get_all_users_with_type_name()
     
     def view_one_user(self, id: str) -> dict[str, Any]:
         user = users_collection.find_one({"_id": ObjectId(id)})
@@ -62,3 +62,33 @@ class UserService:
             raise HTTPException(status_code=404, detail=f"user {id} not found")
 
         return dict(deleted_document)["_id"]
+
+    def _get_all_users_with_type_name(self) -> list[dict[str, Any]]:
+        """
+            Função que retorna uma lista com todos os usuários do banco com o 
+            nome do user_type ao invés do user_type_id. 
+        """
+        pipeline = [
+            {
+                "$lookup": {
+                    "from": "user_types",
+                    "localField": "user_type_id",
+                    "foreignField": "_id",
+                    "as": "user_type"
+                }
+            },
+            {
+                "$set": {
+                    "user_type": {
+                        "$arrayElemAt": ["$user_type.name", 0]
+                    }
+                }
+            },
+            {
+                "$project": {
+                    "user_type_id": 0
+                }
+            }
+        ]
+
+        return list_documents(list(users_collection.aggregate(pipeline)))
