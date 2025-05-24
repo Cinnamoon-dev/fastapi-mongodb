@@ -6,6 +6,7 @@ MONGO_CLIENT = os.getenv("MONGO_CLIENT", "mongodb://localhost:27017")
 client = MongoClient(MONGO_CLIENT)
 db = client.college
 users_collection = db["users"]
+user_types_collection = db["user_types"]
 
 def test_mongo_conn():
     try:
