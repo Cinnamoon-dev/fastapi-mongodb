@@ -7,29 +7,30 @@ from app.database import user_types_collection
 from app.database.serializers import document_serial, list_documents
 
 class UserTypeService:
-    def get_all_user_types(self) -> list[dict[str, Any]]:
+    async def get_all_user_types(self) -> list[dict[str, Any]]:
         # TODO
         # pagination
-        return list_documents(list(user_types_collection.find()))
+        user_types = await user_types_collection.find().to_list()
+        return list_documents(user_types)
     
-    def view_one_user_type(self, id: str) -> dict[str, Any]:
-        user = user_types_collection.find_one({"_id": ObjectId(id)})
+    async def view_one_user_type(self, id: str) -> dict[str, Any]:
+        user = await user_types_collection.find_one({"_id": ObjectId(id)})
 
         if not user:
             raise HTTPException(status_code=404, detail=f"user {id} not found")
         
         return document_serial(user)
     
-    def add_user_type(self, user: UserType) -> str:
+    async def add_user_type(self, user: UserType) -> str:
         # TODO
         # add not repeat test case
-        inserted_user_result = user_types_collection.insert_one(user.model_dump())
+        inserted_user_result = await user_types_collection.insert_one(user.model_dump())
         return inserted_user_result.inserted_id
     
-    def edit_user_type(self, id: str, fields: dict[str, Any]) -> str:
+    async def edit_user_type(self, id: str, fields: dict[str, Any]) -> str:
         # TODO
         # extract in a method
-        document_to_update = user_types_collection.find_one({"_id": ObjectId(id)})
+        document_to_update = await user_types_collection.find_one({"_id": ObjectId(id)})
 
         if not document_to_update:
             raise HTTPException(status_code=404, detail=f"user {id} not found")
@@ -49,11 +50,11 @@ class UserTypeService:
         for k, v in fields_dict.items():
             document_to_update[k] = v
 
-        edited_document = user_types_collection.update_one({"_id": ObjectId(id)}, {"$set": document_to_update})
+        edited_document = await user_types_collection.update_one({"_id": ObjectId(id)}, {"$set": document_to_update})
         return edited_document.upserted_id
     
-    def delete_user_type(self, id: str) -> str:
-        deleted_document = user_types_collection.find_one_and_delete({"_id": ObjectId(id)})
+    async def delete_user_type(self, id: str) -> str:
+        deleted_document = await user_types_collection.find_one_and_delete({"_id": ObjectId(id)})
 
         if deleted_document is None:
             raise HTTPException(status_code=404, detail=f"user {id} not found")
