@@ -1,19 +1,19 @@
 from fastapi import HTTPException
 
 from app.models.userModel import User
-from app.schemas.userSchema import UserAddSchema
 from app.services.userService import UserService
+from app.schemas.userSchema import UserAddSchema, UserEditSchema
 
 class UserAdapter:
-    def user_all_controller(self):
-        users = UserService().get_all_users()
+    async def user_all_controller(self):
+        users = await UserService().get_all_users()
         return {"error": False, "data": users}
     
-    def user_view_controller(self, id):
-        user = UserService().view_one_user(id)
+    async def user_view_controller(self, user_id: str):
+        user = await UserService().view_one_user(user_id)
         return {"error": False, "data": user}
     
-    def user_add_controller(self, user: UserAddSchema):
+    async def user_add_controller(self, user: UserAddSchema):
         try:
             new_user = User(
                 name = user.name,
@@ -24,13 +24,13 @@ class UserAdapter:
         except Exception as e:
             raise HTTPException(status_code=422, detail="User body invalid!")
 
-        inserted_id = UserService().add_user(new_user)
+        inserted_id = await UserService().add_user(new_user)
         return {"error": False, "message": f"user {inserted_id} added successfully"}
     
-    def user_edit_controller(self, id, fields):
-        edited_id = UserService().edit_user(id, fields)
-        return {"error": False, "message": f"user {edited_id} edited successfully"}
+    async def user_edit_controller(self, user_id: str, fields: UserEditSchema):
+        edited_user_id = await UserService().edit_user(user_id, fields.model_dump())
+        return {"error": False, "message": f"user {edited_user_id} edited successfully"}
     
-    def user_delete_controller(self, id):
-        deleted_id = UserService().delete_user(id)
-        return {"error": False, "message": f"user {deleted_id} deleted successfully"}
+    async def user_delete_controller(self, user_id: str):
+        deleted_user_id = await UserService().delete_user(user_id)
+        return {"error": False, "message": f"user {deleted_user_id} deleted successfully"}

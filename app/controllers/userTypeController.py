@@ -8,20 +8,20 @@ router = APIRouter(prefix="/user/type", tags=["user type"])
 
 @router.get("/all")
 async def user_type_all():
-    return UserTypeAdapter().user_type_all_controller()
+    return await UserTypeAdapter().user_type_all_controller()
 
 @router.get("/view/{id}")
 async def user_type_view(id):
-    return UserTypeAdapter().user_type_view_controller(id)
+    return await UserTypeAdapter().user_type_view_controller(id)
 
 @router.post("/add")
 async def user_type_add(user_type: UserTypeAddSchema):
-    return UserTypeAdapter().user_type_add_controller(user_type)
+    return await UserTypeAdapter().user_type_add_controller(user_type)
 
 @router.put("/edit/{id}")
 async def user_type_edit(id: str, user_type: UserTypeEditSchema):
-    return UserTypeAdapter().user_type_edit_controller(id, user_type)
+    return await UserTypeAdapter().user_type_edit_controller(id, user_type)
 
 @router.delete("/delete/{id}")
 async def user_type_delete(id: str):
-    return UserTypeAdapter().user_type_delete_controller(id)
+    return await UserTypeAdapter().user_type_delete_controller(id)
