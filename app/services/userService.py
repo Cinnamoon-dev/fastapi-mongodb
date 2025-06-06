@@ -80,5 +80,4 @@ class UserService:
 
         users = await users_collection.aggregate(pipeline)
         users_list = await users.to_list()
-        print(users_list)
         return list_documents(users_list)
