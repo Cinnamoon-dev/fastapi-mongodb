@@ -2,6 +2,7 @@ from typing import Any
 from bson import ObjectId
 from fastapi import HTTPException
 
+from . import document_update
 from app.models.userModel import User
 from app.database import users_collection
 from app.database.serializers import document_serial, list_documents
@@ -30,27 +31,13 @@ class UserService:
         return inserted_user_result.inserted_id
     
     async def edit_user(self, id: str, fields: dict[str, Any]) -> str:
-        # TODO
-        # extract in a method
         document_to_update = await users_collection.find_one({"_id": ObjectId(id)})
 
         if not document_to_update:
             raise HTTPException(status_code=404, detail=f"user {id} not found")
 
         document_to_update = document_serial(document_to_update)
-
-        fields_dict = dict(fields)
-        keys = []
-
-        for k in fields_dict.keys():
-            if not fields_dict[k]:
-                keys.append(k)
-        
-        for key in keys:
-            fields_dict.pop(key)
-
-        for k, v in fields_dict.items():
-            document_to_update[k] = v
+        document_update(document_to_update, fields)
 
         edited_document = await users_collection.update_one({"_id": ObjectId(id)}, {"$set": document_to_update})
         return edited_document.upserted_id
@@ -93,4 +80,5 @@ class UserService:
 
         users = await users_collection.aggregate(pipeline)
         users_list = await users.to_list()
+        print(users_list)
         return list_documents(users_list)
