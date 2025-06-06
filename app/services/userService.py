@@ -22,8 +22,11 @@ class UserService:
         return document_serial(user)
     
     async def add_user(self, user: User) -> str:
-        # TODO
-        # add not repeat test case
+        user_exists = await users_collection.find_one({"email": user.email})
+
+        if user_exists:
+            raise HTTPException(status_code=422, detail=f"email {user.email} in use")
+
         new_user = user.model_dump()
         new_user["user_type_id"] = ObjectId(new_user["user_type_id"])
         

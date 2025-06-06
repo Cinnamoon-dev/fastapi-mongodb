@@ -22,10 +22,13 @@ class UserTypeService:
         
         return document_serial(user)
     
-    async def add_user_type(self, user: UserType) -> str:
-        # TODO
-        # add not repeat test case
-        inserted_user_result = await user_types_collection.insert_one(user.model_dump())
+    async def add_user_type(self, user_type: UserType) -> str:
+        user_type_exists = await  user_types_collection.find_one({"name": user_type.name})
+
+        if user_type_exists:
+            raise HTTPException(status_code=422, detail=f"user type with name {user_type.name} already exists")
+
+        inserted_user_result = await user_types_collection.insert_one(user_type.model_dump())
         return inserted_user_result.inserted_id
     
     async def edit_user_type(self, id: str, fields: dict[str, Any]) -> str:
