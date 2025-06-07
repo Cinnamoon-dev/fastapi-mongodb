@@ -12,6 +12,7 @@ uvicorn = "^0.34.0"
 pymongo = "^4.10.1"
 pydantic = {extras = ["email"], version = "^2.11.5"}
 pytest = "^8.4.0"
+httpx = "^0.28.1"
 
 
 [build-system]
