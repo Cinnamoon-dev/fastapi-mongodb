@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 
 from app.models.userTypeModel import UserType
-from app.schemas.userTypeSchema import UserTypeAddSchema
+from app.schemas.userTypeSchema import UserTypeAddSchema, UserTypeEditSchema
 from app.services.userTypeService import UserTypeService
 
 class UserTypeAdapter:
@@ -26,8 +26,8 @@ class UserTypeAdapter:
         inserted_id = await UserTypeService().add_user_type(new_user_type)
         return {"error": False, "message": f"user_type {inserted_id} added successfully"}
     
-    async def user_type_edit_controller(self, id, fields):
-        edited_id = await UserTypeService().edit_user_type(id, fields)
+    async def user_type_edit_controller(self, id: str, fields: UserTypeEditSchema):
+        edited_id = await UserTypeService().edit_user_type(id, fields.model_dump())
         return {"error": False, "message": f"user_type {edited_id} edited successfully"}
     
     async def user_type_delete_controller(self, id):
