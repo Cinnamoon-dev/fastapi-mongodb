@@ -1,0 +1,45 @@
+import pytest
+from fastapi.testclient import TestClient
+
+from main import app
+
+# Casos de teste
+# Criar um tipo de usuario valido
+# Criar um tipo de usuario com uma string vazia
+# Criar um tipo de usuario com um nome ja existente
+# ----------------------------------------------------
+# Editar um tipo de usuario para um nome valido
+# Editar um tipo de usuario para uma string vazia
+# Editar um tipo de usuario para um nome ja existente
+# ----------------------------------------------------
+# Deletar um tipo de usuario que nao esta sendo usado
+# Deletar um tipo de usuario que esta sendo usado
+# Deletar um tipo de usuario que nao existe
+
+def create_user_type(name: str) -> str:
+    """ Retorna uma string do dict criado, usar em `client.method(content=STRING)`. """
+    user_type = {
+        "name": name
+    }
+
+    return str(user_type).replace("'", "\"")
+
+@pytest.fixture(scope="session")
+def client():
+    with TestClient(app) as test_client:
+            yield test_client
+
+def test_create_valid_user_type(client):
+    content = create_user_type("valid_user_type_name")
+    response = client.post("/user/type/add", content=content)
+    assert response.status_code == 200
+
+def test_create_invalid_user_type(client):
+    content = create_user_type("")
+    response = client.post("/user/type/add", content=content)
+    assert response.status_code == 422
+
+def test_create_repeated_user_type(client):
+    content = create_user_type("valid_user_type_name")
+    response = client.post("/user/type/add", content=content)
+    assert response.status_code == 422
