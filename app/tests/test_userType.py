@@ -43,3 +43,9 @@ def test_create_repeated_user_type(client):
     content = create_user_type("valid_user_type_name")
     response = client.post("/user/type/add", content=content)
     assert response.status_code == 422
+
+def test_edit_valid_user_type(client):
+    content = create_user_type("valid_user_type_name_2")
+    existing_user_type = client.get("/user/type/view/name/valid_user_type_name").json()
+    response = client.put(f"/user/type/edit/{existing_user_type["data"]["id"]}", content=content)
+    assert response.status_code == 200
