@@ -1,9 +1,9 @@
 import os
-from pymongo import AsyncMongoClient
+from motor.motor_asyncio import AsyncIOMotorClient
 
 MONGO_CLIENT = os.getenv("MONGO_CLIENT", "mongodb://localhost:27017")
 
-client = AsyncMongoClient(MONGO_CLIENT)
+client = AsyncIOMotorClient(MONGO_CLIENT)
 db = client.college
 users_collection = db["users"]
 user_types_collection = db["user_types"]
