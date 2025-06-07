@@ -21,6 +21,14 @@ class UserTypeService:
             raise HTTPException(status_code=404, detail=f"user {id} not found")
         
         return document_serial(user)
+
+    async def view_one_user_type_by_name(self, name: str) -> dict[str, Any]:
+        user = await user_types_collection.find_one({"name": name})
+
+        if not user:
+            raise HTTPException(status_code=404, detail=f"user {name} not found")
+        
+        return document_serial(user)
     
     async def add_user_type(self, user_type: UserType) -> str:
         user_type_exists = await  user_types_collection.find_one({"name": user_type.name})

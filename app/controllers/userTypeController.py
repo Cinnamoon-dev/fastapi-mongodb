@@ -11,8 +11,12 @@ async def user_type_all():
     return await UserTypeAdapter().user_type_all_controller()
 
 @router.get("/view/{id}")
-async def user_type_view(id):
+async def user_type_view(id: str):
     return await UserTypeAdapter().user_type_view_controller(id)
+
+@router.get("/view/name/{name}")
+async def user_type_view_by_name(name: str):
+    return await UserTypeAdapter().user_type_view_by_name_controller(name)
 
 @router.post("/add")
 async def user_type_add(user_type: UserTypeAddSchema):

@@ -12,6 +12,10 @@ class UserTypeAdapter:
     async def user_type_view_controller(self, id):
         user_type = await UserTypeService().view_one_user_type(id)
         return {"error": False, "data": user_type}
+
+    async def user_type_view_by_name_controller(self, name: str):
+        user_type = await UserTypeService().view_one_user_type_by_name(name)
+        return {"error": False, "data": user_type}
     
     async def user_type_add_controller(self, user_type: UserTypeAddSchema):
         try:
