@@ -45,8 +45,11 @@ class UserTypeService:
         if not document_to_update:
             raise HTTPException(status_code=404, detail=f"user {id} not found")
 
-        document_to_update = document_serial(document_to_update)
         document_update(document_to_update, fields)
+
+        existing_document = await user_types_collection.find_one({"name": fields.get("name")})
+        if existing_document:
+            raise HTTPException(status_code=422, detail=f"user type with name {fields.get("name")} already exists")
 
         edited_document = await user_types_collection.update_one({"_id": ObjectId(id)}, {"$set": document_to_update})
         return edited_document.upserted_id
