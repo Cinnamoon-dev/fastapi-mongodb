@@ -39,9 +39,7 @@ class UserService:
         if not document_to_update:
             raise HTTPException(status_code=404, detail=f"user {id} not found")
 
-        document_to_update = document_serial(document_to_update)
         document_update(document_to_update, fields)
-
         edited_document = await users_collection.update_one({"_id": ObjectId(id)}, {"$set": document_to_update})
         return edited_document.upserted_id
     
