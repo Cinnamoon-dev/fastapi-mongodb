@@ -1,6 +1,7 @@
 from typing import Any
 from bson import ObjectId
 from fastapi import HTTPException
+from pymongo.collection import UpdateResult
 
 from . import document_update
 from app.models.userTypeModel import UserType
@@ -32,6 +33,7 @@ class UserTypeService:
         return document_serial(user)
 
     async def add_user_type(self, user_type: UserType) -> str:
+        """Adiciona um usuário na base de dados e retorna seu id."""
         user_type_exists = await user_types_collection.find_one(
             {"name": user_type.name}
         )
@@ -47,7 +49,7 @@ class UserTypeService:
         )
         return inserted_user_result.inserted_id
 
-    async def edit_user_type(self, id: str, fields: dict[str, Any]) -> str:
+    async def edit_user_type(self, id: str, fields: dict[str, Any]) -> UpdateResult:
         document_to_update = await user_types_collection.find_one({"_id": ObjectId(id)})
 
         if not document_to_update:
@@ -64,12 +66,13 @@ class UserTypeService:
                 detail=f"user type with name {fields.get('name')} already exists",
             )
 
-        edited_document = await user_types_collection.update_one(
+        update_result = await user_types_collection.update_one(
             {"_id": ObjectId(id)}, {"$set": document_to_update}
         )
-        return edited_document.upserted_id
+        return update_result
 
     async def delete_user_type(self, id: str) -> str:
+        """Deleta um document na base de dados e retorna seu id."""
         deleted_document = await user_types_collection.find_one_and_delete(
             {"_id": ObjectId(id)}
         )
