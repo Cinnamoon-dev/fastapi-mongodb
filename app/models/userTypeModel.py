@@ -1,5 +1,6 @@
 from pydantic import BaseModel, model_validator
 
+
 class UserType(BaseModel):
     name: str
 

@@ -1,6 +1,7 @@
 from bson import ObjectId
 from pydantic import BaseModel, EmailStr, model_validator
 
+
 class User(BaseModel):
     name: str
     email: EmailStr

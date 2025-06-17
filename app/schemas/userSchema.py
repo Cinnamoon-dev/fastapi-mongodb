@@ -8,6 +8,7 @@ class UserAddSchema(BaseModel):
     password: str
     user_type_id: str
 
+
 class UserEditSchema(BaseModel):
     name: Optional[str] = None
     email: Optional[EmailStr] = None

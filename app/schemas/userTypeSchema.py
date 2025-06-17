@@ -10,6 +10,7 @@ class UserTypeAddSchema(BaseModel):
             raise ValueError("Name field should not be empty!")
         return self
 
+
 class UserTypeEditSchema(BaseModel):
     name: str
 

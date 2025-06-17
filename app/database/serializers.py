@@ -1,5 +1,6 @@
 from typing import Any
 
+
 def document_serial(document: dict[str, Any]) -> dict[str, Any]:
     keys = document.keys()
     id_keys = [key for key in keys if "id" in key]
@@ -12,6 +13,7 @@ def document_serial(document: dict[str, Any]) -> dict[str, Any]:
         del document["_id"]
 
     return document
+
 
 def list_documents(documents: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [document_serial(document) for document in documents]

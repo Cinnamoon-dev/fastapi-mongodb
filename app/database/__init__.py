@@ -8,9 +8,10 @@ db = client.college
 users_collection = db["users"]
 user_types_collection = db["user_types"]
 
+
 async def test_mongo_conn():
     try:
-        await client.admin.command('ping')
+        await client.admin.command("ping")
         print(f"ping {MONGO_CLIENT}")
     except Exception as e:
         print(e)

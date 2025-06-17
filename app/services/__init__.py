@@ -10,6 +10,6 @@ def document_update(document: dict, request_json: dict) -> None:
 
     if request_json.get("email"):
         try:
-            document["email"] = request_json.get("email").lower() # type: ignore
+            document["email"] = request_json.get("email").lower()  # type: ignore
         except:
-            setattr(document, "email", request_json.get("email").lower()) # type: ignore
+            setattr(document, "email", request_json.get("email").lower())  # type: ignore

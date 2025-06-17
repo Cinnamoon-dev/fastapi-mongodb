@@ -10,6 +10,6 @@ app.include_router(userController.router)
 app.include_router(userTypeController.router)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(test_mongo_conn())
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
