@@ -13,10 +13,12 @@ from main import app
 # Editar um tipo de usuario para um nome valido
 # Editar um tipo de usuario para uma string vazia
 # Editar um tipo de usuario para um nome ja existente
+# Editar um id inválido
 # ----------------------------------------------------
 # Deletar um tipo de usuario que nao esta sendo usado
 # Deletar um tipo de usuario que esta sendo usado
 # Deletar um tipo de usuario que nao existe
+# Deletar um id inválido
 # ----------------------------------------------------
 
 
