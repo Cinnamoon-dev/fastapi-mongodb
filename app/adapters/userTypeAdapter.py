@@ -28,7 +28,7 @@ class UserTypeAdapter:
         return {
             "error": False,
             "message": "user_type added successfully",
-            "id": inserted_id,
+            "id": str(inserted_id),
         }
 
 
@@ -41,5 +41,5 @@ class UserTypeAdapter:
         return {
             "error": False,
             "message": "user_type deleted successfully",
-            "id": deleted_id,
+            "id": str(deleted_id),
         }
