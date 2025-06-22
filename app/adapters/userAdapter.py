@@ -22,12 +22,12 @@ class UserAdapter:
                 password=user.password,
                 user_type_id=user.user_type_id,
             )
-        except Exception as e:
+        except Exception:
             raise HTTPException(status_code=422, detail="User body invalid!")
 
         inserted_id = await UserService().add_user(new_user)
-        return {"error": False, "message": f"user {inserted_id} added successfully"}
-
+        return {"error": False, "message": "user added successfully", "id": str(inserted_id)}
+    
     async def user_edit_controller(self, user_id: str, fields: UserEditSchema):
         edited_user_id = await UserService().edit_user(user_id, fields.model_dump())
         return {"error": False, "message": f"user {edited_user_id} edited successfully"}
