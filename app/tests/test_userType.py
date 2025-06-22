@@ -85,8 +85,7 @@ def test_edit_repeated_user_type(client):
 
 def test_delete_unused_user_type(client):
     mocked_type = create_user_type("type_to_delete")
-    client.post("/user/type/add", content=mocked_type)
+    mocked_id = client.post("/user/type/add", content=mocked_type)
 
-    type_to_delete = client.get("/user/type/view/name/type_to_delete").json()
-    response = client.delete(f"/user/type/delete/{type_to_delete['data']['id']}")
+    response = client.delete(f"/user/type/delete/{mocked_id}")
     assert response.status_code == 200
