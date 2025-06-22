@@ -66,13 +66,10 @@ def test_edit_valid_user_type(client):
 
 def test_edit_invalid_user_type(client):
     type_to_edit = create_user_type("type_to_edit")
-    client.post("/user/type/add", content=type_to_edit)
+    inserted_id = client.post("/user/type/add", content=type_to_edit).json()["id"]
 
     content = create_user_type("")
-    existing_user_type = client.get("/user/type/view/name/type_to_edit").json()
-    response = client.put(
-        f"/user/type/edit/{existing_user_type['data']['id']}", content=content
-    )
+    response = client.put(f"/user/type/edit/{inserted_id}", content=content)
     assert response.status_code == 422
 
 
@@ -80,15 +77,11 @@ def test_edit_repeated_user_type(client):
     mocked_type = create_user_type("mocked_type")
     existing_type = create_user_type("existing_type")
 
-    client.post("/user/type/add", content=mocked_type)
+    mocked_id = client.post("/user/type/add", content=mocked_type).json()["id"]
     client.post("/user/type/add", content=existing_type)
 
-    mocked_type_with_id = client.get("/user/type/view/name/mocked_type").json()
-    response = client.put(
-        f"/user/type/edit/{mocked_type_with_id['data']['id']}", content=existing_type
-    )
+    response = client.put(f"/user/type/edit/{mocked_id}", content=existing_type)
     assert response.status_code == 422
-
 
 def test_delete_unused_user_type(client):
     mocked_type = create_user_type("type_to_delete")
