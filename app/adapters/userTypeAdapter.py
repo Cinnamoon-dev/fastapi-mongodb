@@ -31,11 +31,12 @@ class UserTypeAdapter:
             "id": inserted_id,
         }
 
+
     async def user_type_edit_controller(self, id: str, fields: UserTypeEditSchema):
         await UserTypeService().edit_user_type(id, fields.model_dump())
-        return {"error": False, "message": "user_type edited successfully", "id": id}
-
-    async def user_type_delete_controller(self, id: str):
+        return {"error": False, "message": f"user_type {id} edited successfully"}
+    
+    async def user_type_delete_controller(self, id):
         deleted_id = await UserTypeService().delete_user_type(id)
         return {
             "error": False,
