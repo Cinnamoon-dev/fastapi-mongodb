@@ -10,6 +10,7 @@ from main import app
 # Criar um tipo de usuario com um nome ja existente
 # ----------------------------------------------------
 # Ver um tipo de usuário enviando um id inválido
+# Ver um tipo de usuário enviando um id válido
 # ----------------------------------------------------
 # Editar um tipo de usuario sem mandar o corpo da requisição, ou com o corpo vazio
 # Editar um tipo de usuario para um nome valido
@@ -85,7 +86,13 @@ def test_edit_repeated_user_type(client):
 
 def test_delete_unused_user_type(client):
     mocked_type = create_user_type("type_to_delete")
-    mocked_id = client.post("/user/type/add", content=mocked_type)
+    mocked_id = client.post("/user/type/add", content=mocked_type).json()["id"]
 
     response = client.delete(f"/user/type/delete/{mocked_id}")
     assert response.status_code == 200
+
+def test_delete_invalid_id_user_type(client):
+    invalid_id = "z8545048a51862c39c4d4de0"
+    response = client.delete(f"/user/type/delete/{invalid_id}")
+
+    assert response.status_code == 422
