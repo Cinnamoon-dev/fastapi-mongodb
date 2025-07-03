@@ -17,7 +17,7 @@ jobs:
               uses: actions/checkout@v3
             
             - name: Start containers
-              run: docker compose -f "compose.yaml" up --build -d
+              run: docker compose -f "compose.test.yaml" up --build -d
 
             - name: Wait containers
               run: sleep 5
@@ -26,4 +26,4 @@ jobs:
               run: docker exec -i api pytest
             
             - name: Clean up
-              run: docker compose -f "compose.yaml" down --timeout 1
+              run: docker compose -f "compose.test.yaml" down --timeout 1
