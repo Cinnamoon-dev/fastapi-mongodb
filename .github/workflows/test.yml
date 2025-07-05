@@ -16,6 +16,9 @@ jobs:
             - name: Start containers
               run: docker compose -f "compose.test.yaml" up --build -d
 
+            - name: Wait containers
+              run: sleep 5
+
             - name: Run tests
               run: docker exec -i api pytest
             
