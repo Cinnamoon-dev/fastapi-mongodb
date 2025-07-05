@@ -1,0 +1,30 @@
+networks:
+  mongo-api:
+
+services:
+  app:
+    container_name: api
+    build: 
+      dockerfile: ./Dockerfile
+      target: runtime
+    environment:
+      - MONGO_CLIENT=mongodb://mongo:27017
+    ports:
+      - 8000:8000
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - mongo-api
+    
+  mongo:
+    container_name: mongo-api
+    image: mongo:latest
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 3s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    networks:
+      - mongo-api
