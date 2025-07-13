@@ -11,7 +11,7 @@ git -C ${git_path} pull &&
 echo "DONE"
 
 echo "STOPPING OLD VERSION..."
-sudo docker compose -f compose.deploy.yaml down -t 1 &&
+sudo docker compose -f ${git_path}/compose.deploy.yaml down -t 1 &&
 echo "DONE"
 
 echo "PULLING NEW IMAGE..."
@@ -19,5 +19,5 @@ sudo docker pull ${docker_user}/${docker_image}:${docker_tag} &&
 echo "DONE"
 
 echo "STARTING NEW VERSION..."
-sudo docker compose -f compose.deploy.yaml up --build -d &&
+sudo docker compose -f ${git_path}/compose.deploy.yaml up --build -d &&
 echo "DONE"
