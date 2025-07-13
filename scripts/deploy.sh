@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 readonly git_path="/home/ubuntu/fastapi-mongodb"
 
@@ -11,13 +11,13 @@ git -C ${git_path} pull &&
 echo "DONE"
 
 echo "STOPPING OLD VERSION..."
-docker compose -f compose.deploy.yaml down -t 1 &&
+sudo docker compose -f compose.deploy.yaml down -t 1 &&
 echo "DONE"
 
 echo "PULLING NEW IMAGE..."
-docker pull ${docker_user}/${docker_image}:${docker_tag} &&
+sudo docker pull ${docker_user}/${docker_image}:${docker_tag} &&
 echo "DONE"
 
 echo "STARTING NEW VERSION..."
-docker compose -f compose.deploy.yaml up --build -d &&
+sudo docker compose -f compose.deploy.yaml up --build -d &&
 echo "DONE"
