@@ -1,7 +1,7 @@
 name: Push to EC2
 on:
   workflow_run:
-    workflows: [Build container CD workflow]
+    workflows: ["Build container CD workflow"]
     types:
       - completed
 
