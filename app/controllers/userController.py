@@ -6,10 +6,6 @@ from app.schemas.userSchema import UserEditSchema, UserAddSchema
 router = APIRouter(prefix="/user", tags=["user"])
 
 
-@router.get("/user_test")
-async def user_test():
-    return {"message": "user_test"}
-
 @router.get("/")
 async def user_all():
     return await UserAdapter().user_all_controller()
