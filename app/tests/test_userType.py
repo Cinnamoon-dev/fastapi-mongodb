@@ -40,37 +40,37 @@ def client():
 
 def test_create_valid_user_type(client):
     content = create_user_type("valid_user_type_name")
-    response = client.post("/user/type/add", content=content)
+    response = client.post("/user/type/", content=content)
     assert response.status_code == 200
 
 
 def test_create_invalid_user_type(client):
     content = create_user_type("")
-    response = client.post("/user/type/add", content=content)
+    response = client.post("/user/type/", content=content)
     assert response.status_code == 422
 
 
 def test_create_repeated_user_type(client):
     content = create_user_type("valid_user_type_name")
-    response = client.post("/user/type/add", content=content)
+    response = client.post("/user/type/", content=content)
     assert response.status_code == 422
 
 
 def test_edit_valid_user_type(client):
     content = create_user_type("valid_user_type_name_2")
-    existing_user_type = client.get("/user/type/view/name/valid_user_type_name").json()
+    existing_user_type = client.get("/user/type/name/valid_user_type_name").json()
     response = client.put(
-        f"/user/type/edit/{existing_user_type['data']['id']}", content=content
+        f"/user/type/{existing_user_type['data']['id']}", content=content
     )
     assert response.status_code == 200
 
 
 def test_edit_invalid_user_type(client):
     type_to_edit = create_user_type("type_to_edit")
-    inserted_id = client.post("/user/type/add", content=type_to_edit).json()["id"]
+    inserted_id = client.post("/user/type/", content=type_to_edit).json()["id"]
 
     content = create_user_type("")
-    response = client.put(f"/user/type/edit/{inserted_id}", content=content)
+    response = client.put(f"/user/type/{inserted_id}", content=content)
     assert response.status_code == 422
 
 
@@ -78,21 +78,21 @@ def test_edit_repeated_user_type(client):
     mocked_type = create_user_type("mocked_type")
     existing_type = create_user_type("existing_type")
 
-    mocked_id = client.post("/user/type/add", content=mocked_type).json()["id"]
-    client.post("/user/type/add", content=existing_type)
+    mocked_id = client.post("/user/type/", content=mocked_type).json()["id"]
+    client.post("/user/type/", content=existing_type)
 
-    response = client.put(f"/user/type/edit/{mocked_id}", content=existing_type)
+    response = client.put(f"/user/type/{mocked_id}", content=existing_type)
     assert response.status_code == 422
 
 def test_delete_unused_user_type(client):
     mocked_type = create_user_type("type_to_delete")
-    mocked_id = client.post("/user/type/add", content=mocked_type).json()["id"]
+    mocked_id = client.post("/user/type/", content=mocked_type).json()["id"]
 
-    response = client.delete(f"/user/type/delete/{mocked_id}")
+    response = client.delete(f"/user/type/{mocked_id}")
     assert response.status_code == 200
 
 def test_delete_invalid_id_user_type(client):
     invalid_id = "z8545048a51862c39c4d4de0"
-    response = client.delete(f"/user/type/delete/{invalid_id}")
+    response = client.delete(f"/user/type/{invalid_id}")
 
     assert response.status_code == 422
