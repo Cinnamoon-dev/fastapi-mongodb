@@ -1,5 +1,6 @@
 from typing import Any
 from bson import ObjectId
+from bson.errors import InvalidId
 from fastapi import HTTPException
 from pymongo.collection import UpdateResult
 
@@ -73,9 +74,14 @@ class UserTypeService:
 
     async def delete_user_type(self, id: str) -> str:
         """Deleta um document na base de dados e retorna seu id."""
-        deleted_document = await user_types_collection.find_one_and_delete(
-            {"_id": ObjectId(id)}
-        )
+        try:
+            deleted_document = await user_types_collection.find_one_and_delete(
+                {"_id": ObjectId(id)}
+            )
+        except InvalidId:
+            raise HTTPException(status_code=422, detail=f"id {id} invalid")
+        except Exception:
+            raise HTTPException(status_code=500, detail=f"Database Error")
 
         if deleted_document is None:
             raise HTTPException(status_code=404, detail=f"user {id} not found")
