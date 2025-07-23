@@ -5,6 +5,9 @@ from app.schemas.userSchema import UserEditSchema, UserAddSchema
 
 router = APIRouter(prefix="/user", tags=["user"])
 
+@router.get("/aula_test")
+async def user_all():
+    return {"message": "aula_test"}
 
 @router.get("/")
 async def user_all():
